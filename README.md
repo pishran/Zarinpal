@@ -15,14 +15,6 @@ composer require pishran/zarinpal
 ```
 ## تنظیمات - Configuration
 
-Publish the config file to use your preferred font
-
-فایل تنظیمات را منتشر کنید تا بتوانید از فونت دلخواه استفاده کنید
-
-```bash
-php artisan vendor:publish --tag=zarinpal --force
-```
-
 Add your merchant id to .env file
 
 مرچنت کد خود را اضافه کنید
