@@ -4,31 +4,28 @@ namespace Pishran\Zarinpal;
 
 class VerificationResponse
 {
-    private $sandbox = false;
     private $status = 0;
-    private $refId = 0;
+    private $referenceId = 0;
 
-    public function __construct(bool $sandbox, string $result)
+    public function __construct(string $result)
     {
-        $this->sandbox = $sandbox;
-
         $response = json_decode($result);
-        if ($response === null || !isset($response->Status, $response->RefID)) {
+        if ($response === null || ! isset($response->Status, $response->RefID)) {
             return;
         }
 
         $this->status = $response->Status;
-        $this->refId = $response->RefID;
+        $this->referenceId = $response->RefID;
     }
 
     public function success(): bool
     {
-        return $this->status === 100 && $this->refId > 0;
+        return $this->status === 100 && $this->referenceId > 0;
     }
 
-    public function refId(): int
+    public function referenceId(): int
     {
-        return $this->refId;
+        return $this->referenceId;
     }
 
     public function error(): Error

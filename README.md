@@ -23,16 +23,23 @@ Add your merchant id to .env file
 ZARINPAL_MERCHANT_ID=00000000-0000-0000-0000-000000000000
 ```
 
+To enable sandbox mode
+
+برای فعالسازی حالت تست
+
+```dotenv
+ZARINPAL_SANDBOX_ENABLED=true
+```
+
 ## روش استفاده | How to use
 
 ### ارسال مشتری به درگاه پرداخت
 
 ```php
 $response = zarinpal()
-    ->sandbox() // فعالسازی حالت تست
     ->amount(100) // مبلغ تراکنش به تومان
     ->request()
-    ->zarin() // فعالسازی زرین گیت
+    ->zarin() // فعالسازی زرین گیت - اختیاری
     ->callback('https://domain.com/verification') // آدرس برگشت پس از پرداخت
     ->description('transaction info') // توضیحات تراکنش
     ->email('name@domain.com') // ایمیل مشتری - اختیاری
@@ -40,7 +47,7 @@ $response = zarinpal()
     ->send();
 
 if (!$response->success()) {
-    return $response->error();
+    return $response->error()->message();
 }
 
 // ذخیره اطلاعات در دیتابیس
@@ -56,17 +63,16 @@ return $response->redirect();
 $authority = request()->query('Authority'); // دریافت کوئری استرینگ ارسال شده توسط زرین پال
 
 $response = zarinpal()
-    ->sandbox()
     ->amount(100)
     ->verification()
     ->authority($authority)
     ->send();
 
 if (!$response->success()) {
-    return $response->error();
+    return $response->error()->message();
 }
 
 // پرداخت موفقیت آمیز بود
 // دریافت شماره پیگیری تراکنش و انجام امور مربوط به دیتابیس
-return $response->refId();
+return $response->referenceId();
 ```

@@ -5,7 +5,6 @@ namespace Pishran\Zarinpal;
 class Zarinpal
 {
     private $merchantId = '';
-    private $sandbox = false;
     private $amount = 0;
 
     public function __construct()
@@ -13,22 +12,14 @@ class Zarinpal
         $this->merchantId = config('zarinpal.merchant_id');
     }
 
-    public function request()
+    public function request(): Request
     {
-        return new Request($this->merchantId, $this->sandbox, $this->amount);
+        return new Request($this->merchantId, $this->amount);
     }
 
-    public function verification()
+    public function verification(): Verification
     {
-        return new Verification($this->merchantId, $this->sandbox, $this->amount);
-    }
-
-    public function sandbox(): self
-    {
-        $this->sandbox = true;
-        $this->merchantId = '00000000-0000-0000-0000-000000000000';
-
-        return $this;
+        return new Verification($this->merchantId, $this->amount);
     }
 
     public function amount(int $amount): self

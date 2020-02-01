@@ -5,7 +5,6 @@ namespace Pishran\Zarinpal;
 class Request extends Http
 {
     private $merchantId = '';
-    private $sandbox = false;
     private $amount = 0;
     private $zarin = false;
     private $callback = '';
@@ -13,14 +12,13 @@ class Request extends Http
     private $email = '';
     private $mobile = '';
 
-    public function __construct(string $merchantId, bool $sandbox, int $amount)
+    public function __construct(string $merchantId, int $amount)
     {
         $this->merchantId = $merchantId;
-        $this->sandbox = $sandbox;
         $this->amount = $amount;
     }
 
-    public function send()
+    public function send(): RequestResponse
     {
         $data = [
             'MerchantID' => $this->merchantId,
@@ -37,13 +35,13 @@ class Request extends Http
             $data['Mobile'] = $this->mobile;
         }
 
-        $url = $this->sandbox
+        $url = config('zarinpal.sandbox_enabled')
             ? 'https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json'
             : 'https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json';
 
         $result = $this->postJson($url, $data);
 
-        return new RequestResponse($this->sandbox, $this->zarin, $result);
+        return new RequestResponse($this->zarin, $result);
     }
 
     public function zarin(): self

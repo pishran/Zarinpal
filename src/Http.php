@@ -4,7 +4,7 @@ namespace Pishran\Zarinpal;
 
 class Http
 {
-    protected function postJson(string $url, array $params)
+    protected function postJson(string $url, array $params): ?string
     {
         $ch = curl_init();
 

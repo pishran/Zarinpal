@@ -2,20 +2,20 @@
 
 namespace Pishran\Zarinpal;
 
+use Illuminate\Http\RedirectResponse;
+
 class RequestResponse
 {
-    private $sandbox = false;
     private $status = 0;
     private $authority = '';
     private $zarin = '';
 
-    public function __construct(bool $sandbox, bool $zarin, string $result)
+    public function __construct(bool $zarin, string $result)
     {
-        $this->sandbox = $sandbox;
         $this->zarin = $zarin ? '/ZarinGate' : '';
 
         $response = json_decode($result);
-        if ($response === null || !isset($response->Status, $response->Authority)) {
+        if ($response === null || ! isset($response->Status, $response->Authority)) {
             return;
         }
 
@@ -28,20 +28,20 @@ class RequestResponse
         return $this->status === 100 && strlen($this->authority) === 36;
     }
 
-    public function redirect()
+    public function redirect(): ?RedirectResponse
     {
         $url = $this->url();
 
         return $url ? redirect($url) : null;
     }
 
-    public function url()
+    public function url(): ?string
     {
-        if (!$this->success()) {
+        if (! $this->success()) {
             return null;
         }
 
-        $url = $this->sandbox
+        $url = config('zarinpal.sandbox_enabled')
             ? 'https://sandbox.zarinpal.com/pg/StartPay/'
             : 'https://www.zarinpal.com/pg/StartPay/';
 

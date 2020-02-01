@@ -16,7 +16,7 @@ class Error
         return $this->status;
     }
 
-    public function __toString()
+    public function message(): string
     {
         switch ($this->status) {
             case 0:
