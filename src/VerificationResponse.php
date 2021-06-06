@@ -40,11 +40,6 @@ class VerificationResponse
         return $this->code === 100;
     }
 
-    public function alreadyVerified(): bool
-    {
-        return $this->code === 101;
-    }
-
     public function cardHash(): string
     {
         return $this->cardHash;
