@@ -24,7 +24,7 @@ class VerificationResponse
 
     public function __construct(array $result)
     {
-        $this->code = $result['data']['code'];
+        $this->code = $result['data']['code'] ?? $result['errors']['code'];
 
         if ($this->success()) {
             $this->cardHash = $result['data']['card_hash'];
