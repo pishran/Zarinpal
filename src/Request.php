@@ -2,60 +2,51 @@
 
 namespace Pishran\Zarinpal;
 
-class Request extends Http
-{
-    private $merchantId = '';
-    private $amount = 0;
-    private $zarin = false;
-    private $callback = '';
-    private $description = '';
-    private $email = '';
-    private $mobile = '';
+use Illuminate\Support\Facades\Http;
 
-    public function __construct(string $merchantId, int $amount)
+class Request
+{
+    /** @var int */
+    private $amount;
+
+    /** @var string */
+    private $description;
+
+    /** @var string */
+    private $callbackUrl;
+
+    /** @var string */
+    private $mobile;
+
+    /** @var string */
+    private $email;
+
+    public function __construct(int $amount)
     {
-        $this->merchantId = $merchantId;
         $this->amount = $amount;
     }
 
     public function send(): RequestResponse
     {
+        $url = config('zarinpal.sandbox_enabled')
+            ? 'https://sandbox.zarinpal.com/pg/v4/payment/request.json'
+            : 'https://api.zarinpal.com/pg/v4/payment/request.json';
+
         $data = [
-            'MerchantID' => $this->merchantId,
-            'Amount' => $this->amount,
-            'CallbackURL' => $this->callback,
-            'Description' => $this->description,
+            'merchant_id' => config('zarinpal.merchant_id'),
+            'currency' => config('zarinpal.currency'),
+            'amount' => $this->amount,
+            'description' => $this->description,
+            'callback_url' => $this->callbackUrl,
+            'metadata' => [
+                'mobile' => $this->mobile,
+                'email' => $this->email,
+            ],
         ];
 
-        if ($this->email) {
-            $data['Email'] = $this->email;
-        }
+        $response = Http::asJson()->acceptJson()->post($url, $data);
 
-        if ($this->mobile) {
-            $data['Mobile'] = $this->mobile;
-        }
-
-        $url = config('zarinpal.sandbox_enabled')
-            ? 'https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json'
-            : 'https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json';
-
-        $result = $this->postJson($url, $data);
-
-        return new RequestResponse($this->zarin, $result);
-    }
-
-    public function zarin(): self
-    {
-        $this->zarin = true;
-
-        return $this;
-    }
-
-    public function callback(string $url): self
-    {
-        $this->callback = $url;
-
-        return $this;
+        return new RequestResponse($response->json());
     }
 
     public function description(string $description): self
@@ -65,9 +56,9 @@ class Request extends Http
         return $this;
     }
 
-    public function email(string $email): self
+    public function callbackUrl(string $callbackUrl): self
     {
-        $this->email = $email;
+        $this->callbackUrl = $callbackUrl;
 
         return $this;
     }
@@ -75,6 +66,13 @@ class Request extends Http
     public function mobile(string $mobile): self
     {
         $this->mobile = $mobile;
+
+        return $this;
+    }
+
+    public function email(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

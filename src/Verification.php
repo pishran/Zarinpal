@@ -2,33 +2,36 @@
 
 namespace Pishran\Zarinpal;
 
-class Verification extends Http
-{
-    private $merchantId = '';
-    private $amount = 0;
-    private $authority = '';
+use Illuminate\Support\Facades\Http;
 
-    public function __construct(string $merchantId, int $amount)
+class Verification
+{
+    /** @var int */
+    private $amount;
+
+    /** @var string */
+    private $authority;
+
+    public function __construct(int $amount)
     {
-        $this->merchantId = $merchantId;
         $this->amount = $amount;
     }
 
     public function send(): VerificationResponse
     {
+        $url = config('zarinpal.sandbox_enabled')
+            ? 'https://sandbox.zarinpal.com/pg/v4/payment/verify.json'
+            : 'https://api.zarinpal.com/pg/v4/payment/verify.json';
+
         $data = [
-            'MerchantID' => $this->merchantId,
-            'Amount' => $this->amount,
-            'Authority' => $this->authority,
+            'merchant_id' => config('zarinpal.merchant_id'),
+            'amount' => $this->amount,
+            'authority' => $this->authority,
         ];
 
-        $url = config('zarinpal.sandbox_enabled')
-            ? 'https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentVerification.json'
-            : 'https://www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json';
+        $response = Http::asJson()->acceptJson()->post($url, $data);
 
-        $result = $this->postJson($url, $data);
-
-        return new VerificationResponse($result);
+        return new VerificationResponse($response->json());
     }
 
     public function authority(string $authority): self

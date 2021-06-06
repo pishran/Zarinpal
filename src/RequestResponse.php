@@ -6,46 +6,55 @@ use Illuminate\Http\RedirectResponse;
 
 class RequestResponse
 {
-    private $status = 0;
-    private $authority = '';
-    private $zarin = '';
+    /** @var int */
+    private $code;
 
-    public function __construct(bool $zarin, string $result)
+    /** @var string|null */
+    private $authority;
+
+    /** @var string|null */
+    private $feeType;
+
+    /** @var int|null */
+    private $fee;
+
+    public function __construct(array $result)
     {
-        $this->zarin = $zarin ? '/ZarinGate' : '';
+        $this->code = $result['data']['code'];
 
-        $response = json_decode($result);
-        if ($response === null || ! isset($response->Status, $response->Authority)) {
-            return;
+        if ($this->success()) {
+            $this->authority = $result['data']['authority'];
+            $this->feeType = $result['data']['fee_type'];
+            $this->fee = $result['data']['fee'];
         }
-
-        $this->status = $response->Status;
-        $this->authority = $response->Authority;
     }
 
     public function success(): bool
     {
-        return $this->status === 100 && strlen($this->authority) === 36;
+        return $this->code === 100;
     }
 
-    public function redirect(): ?RedirectResponse
-    {
-        $url = $this->url();
-
-        return $url ? redirect($url) : null;
-    }
-
-    public function url(): ?string
+    public function url(): string
     {
         if (! $this->success()) {
-            return null;
+            return '';
         }
 
         $url = config('zarinpal.sandbox_enabled')
             ? 'https://sandbox.zarinpal.com/pg/StartPay/'
             : 'https://www.zarinpal.com/pg/StartPay/';
 
-        return $url.$this->authority.$this->zarin;
+        return $url.$this->authority;
+    }
+
+    /**
+     * @return RedirectResponse|null
+     */
+    public function redirect()
+    {
+        $url = $this->url();
+
+        return $url ? redirect($url) : null;
     }
 
     public function authority(): string
@@ -53,8 +62,18 @@ class RequestResponse
         return $this->authority;
     }
 
+    public function feeType(): string
+    {
+        return $this->feeType;
+    }
+
+    public function fee(): int
+    {
+        return $this->fee;
+    }
+
     public function error(): Error
     {
-        return new Error($this->status);
+        return new Error($this->code);
     }
 }
