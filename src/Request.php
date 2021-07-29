@@ -9,6 +9,8 @@ class Request
     /** @var int */
     private $amount;
 
+    private $merchant_id;
+
     /** @var string */
     private $description;
 
@@ -21,9 +23,10 @@ class Request
     /** @var string */
     private $email;
 
-    public function __construct(int $amount)
+    public function __construct(int $amount, $merchant_id)
     {
         $this->amount = $amount;
+        $this->merchant_id = $merchant_id;
     }
 
     public function send(): RequestResponse
@@ -33,7 +36,7 @@ class Request
             : 'https://api.zarinpal.com/pg/v4/payment/request.json';
 
         $data = [
-            'merchant_id' => config('zarinpal.merchant_id'),
+            'merchant_id' => $this->merchant_id,
             'currency' => config('zarinpal.currency'),
             'amount' => $this->amount,
             'description' => $this->description,
