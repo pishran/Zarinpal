@@ -81,6 +81,7 @@ $status = request()->query('Status'); // دریافت کوئری استرینگ 
 
 $response = zarinpal()
     ->amount(100)
+    ->merchant_id(config('zarinpal.merchant_id'))
     ->verification()
     ->authority($authority)
     ->send();
