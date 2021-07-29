@@ -55,6 +55,7 @@ ZARINPAL_SANDBOX_ENABLED=true
 ```php
 $response = zarinpal()
     ->amount(100) // مبلغ تراکنش
+    ->merchant_id(config('zarinpal.merchant_id'))
     ->request()
     ->description('transaction info') // توضیحات تراکنش
     ->callbackUrl('https://domain.com/verification') // آدرس برگشت پس از پرداخت
