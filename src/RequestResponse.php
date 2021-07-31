@@ -47,10 +47,7 @@ class RequestResponse
         return $url.$this->authority;
     }
 
-    /**
-     * @return RedirectResponse|null
-     */
-    public function redirect()
+    public function redirect(): ?RedirectResponse
     {
         $url = $this->url();
 

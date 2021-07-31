@@ -6,14 +6,18 @@ use Illuminate\Support\Facades\Http;
 
 class Verification
 {
+    /** @var string */
+    private $merchantId;
+
     /** @var int */
     private $amount;
 
     /** @var string */
     private $authority;
 
-    public function __construct(int $amount)
+    public function __construct(string $merchantId, int $amount)
     {
+        $this->merchantId = $merchantId;
         $this->amount = $amount;
     }
 
@@ -24,7 +28,7 @@ class Verification
             : 'https://api.zarinpal.com/pg/v4/payment/verify.json';
 
         $data = [
-            'merchant_id' => config('zarinpal.merchant_id'),
+            'merchant_id' => $this->merchantId,
             'amount' => $this->amount,
             'authority' => $this->authority,
         ];

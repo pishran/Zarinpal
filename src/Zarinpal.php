@@ -4,8 +4,18 @@ namespace Pishran\Zarinpal;
 
 class Zarinpal
 {
+    /** @var string */
+    private $merchantId;
+
     /** @var int */
     private $amount;
+
+    public function merchantId(string $merchantId): self
+    {
+        $this->merchantId = $merchantId;
+
+        return $this;
+    }
 
     public function amount(int $amount): self
     {
@@ -16,11 +26,13 @@ class Zarinpal
 
     public function request(): Request
     {
-        return new Request($this->amount);
+        $merchantId = $this->merchantId ?: config('zarinpal.merchant_id');
+        return new Request($merchantId, $this->amount);
     }
 
     public function verification(): Verification
     {
-        return new Verification($this->amount);
+        $merchantId = $this->merchantId ?: config('zarinpal.merchant_id');
+        return new Verification($merchantId, $this->amount);
     }
 }

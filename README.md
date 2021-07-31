@@ -24,6 +24,10 @@ Add your merchant id to .env file
 ZARINPAL_MERCHANT_ID=00000000-0000-0000-0000-000000000000
 ```
 
+You can also define merchant id in runtime.
+
+امکان تعیین مرچنت کد در حین اجرا نیز وجود دارد که در ادامه توضیح داده خواهد شد.
+
 To change currency to Toman (Default) 
 
 برای تغییر واحد پول به تومان (مقدار پیشفرض)
@@ -54,6 +58,7 @@ ZARINPAL_SANDBOX_ENABLED=true
 
 ```php
 $response = zarinpal()
+    ->merchantId('00000000-0000-0000-0000-000000000000') // تعیین مرچنت کد در حین اجرا - اختیاری
     ->amount(100) // مبلغ تراکنش
     ->request()
     ->description('transaction info') // توضیحات تراکنش
@@ -80,6 +85,7 @@ $authority = request()->query('Authority'); // دریافت کوئری استر�
 $status = request()->query('Status'); // دریافت کوئری استرینگ ارسال شده توسط زرین پال
 
 $response = zarinpal()
+    ->merchantId('00000000-0000-0000-0000-000000000000') // تعیین مرچنت کد در حین اجرا - اختیاری
     ->amount(100)
     ->verification()
     ->authority($authority)

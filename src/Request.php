@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Http;
 
 class Request
 {
+    /** @var string */
+    private $merchantId;
+
     /** @var int */
     private $amount;
 
@@ -21,8 +24,9 @@ class Request
     /** @var string */
     private $email;
 
-    public function __construct(int $amount)
+    public function __construct(string $merchantId, int $amount)
     {
+        $this->merchantId = $merchantId;
         $this->amount = $amount;
     }
 
@@ -33,7 +37,7 @@ class Request
             : 'https://api.zarinpal.com/pg/v4/payment/request.json';
 
         $data = [
-            'merchant_id' => config('zarinpal.merchant_id'),
+            'merchant_id' => $this->merchantId,
             'currency' => config('zarinpal.currency'),
             'amount' => $this->amount,
             'description' => $this->description,
