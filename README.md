@@ -24,7 +24,7 @@ Add your merchant id to .env file
 ZARINPAL_MERCHANT_ID=00000000-0000-0000-0000-000000000000
 ```
 
-You can also define merchant id in runtime.
+You can also define merchant id at runtime.
 
 امکان تعیین مرچنت کد در حین اجرا نیز وجود دارد که در ادامه توضیح داده خواهد شد.
 
