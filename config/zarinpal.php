@@ -7,6 +7,4 @@ return [
     // IRR for Rial or IRT for Toman
     'currency' => env('ZARINPAL_CURRENCY', 'IRT'),
 
-    'sandbox_enabled' => env('ZARINPAL_SANDBOX_ENABLED', true),
-
 ];

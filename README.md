@@ -44,14 +44,6 @@ To change currency to Rial
 ZARINPAL_CURRENCY=IRR
 ```
 
-To enable sandbox mode
-
-برای فعالسازی حالت تست
-
-```dotenv
-ZARINPAL_SANDBOX_ENABLED=true
-```
-
 ## روش استفاده | How to use
 
 ### ارسال مشتری به درگاه پرداخت | Send customer to payment gateway

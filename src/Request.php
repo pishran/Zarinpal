@@ -32,9 +32,7 @@ class Request
 
     public function send(): RequestResponse
     {
-        $url = config('zarinpal.sandbox_enabled')
-            ? 'https://sandbox.zarinpal.com/pg/v4/payment/request.json'
-            : 'https://api.zarinpal.com/pg/v4/payment/request.json';
+        $url = 'https://api.zarinpal.com/pg/v4/payment/request.json';
 
         $data = [
             'merchant_id' => $this->merchantId,

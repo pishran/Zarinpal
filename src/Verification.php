@@ -23,9 +23,7 @@ class Verification
 
     public function send(): VerificationResponse
     {
-        $url = config('zarinpal.sandbox_enabled')
-            ? 'https://sandbox.zarinpal.com/pg/v4/payment/verify.json'
-            : 'https://api.zarinpal.com/pg/v4/payment/verify.json';
+        $url = 'https://api.zarinpal.com/pg/v4/payment/verify.json';
 
         $data = [
             'merchant_id' => $this->merchantId,
