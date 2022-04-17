@@ -34,16 +34,23 @@ class Request
     {
         $url = 'https://api.zarinpal.com/pg/v4/payment/request.json';
 
+        $metadata = [];
+        
+        if ($this->mobile) {
+            $metadata['mobile'] = $this->mobile;
+        }
+        
+        if ($this->email) {
+            $metadata['email'] = $this->email;
+        }
+
         $data = [
             'merchant_id' => $this->merchantId,
             'currency' => config('zarinpal.currency'),
             'amount' => $this->amount,
             'description' => $this->description,
             'callback_url' => $this->callbackUrl,
-            'metadata' => [
-                'mobile' => $this->mobile,
-                'email' => $this->email,
-            ],
+            'metadata' => $metadata,
         ];
 
         $response = Http::asJson()->acceptJson()->post($url, $data);
