@@ -18,7 +18,7 @@ class Error
 
     public function message(): string
     {
-        switch ($this->code) {
+        switch ($this->status) {
             case -9 :
                 return 'خطای اعتبار سنجی';
             case -10 :
